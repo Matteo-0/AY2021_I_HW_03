@@ -15,17 +15,17 @@
 
 extern int r;
 extern char received;
-extern int b,t,h;
+extern int b,R,G,B;
 
 CY_ISR(Received_Datum)
 {
     if(UART_ReadRxStatus() == UART_RX_STS_FIFO_NOTEMPTY)
     {
         received = UART_ReadRxData();
-        if(received >= 0x0A && received <= 0xFF )
+        if(received >= 0x00 && received <= 0xFF )
         {
             r++;
-            b=0;
+            //b=0;
         }
         else
         {
