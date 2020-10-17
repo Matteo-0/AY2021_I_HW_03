@@ -1,20 +1,21 @@
-/* ========================================
+/*
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
+ * 
+ * 
+ * 
  *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * 
+ * 
  *
- * ========================================
+ * 
 */
 
 #include "project.h"
 #include "ISRUART.h"
+#include "ISRTimer.h"
 #include "stdio.h"
 
-int t=0;
+int t=0,h=0,c=0,s=0,p=0,q=0;
 int b=0;
 int r=0;
 char received;
@@ -30,6 +31,7 @@ int main(void)
     PWMBlue_Start();
     ClockPWM_Start();
     ISR_Received_StartEx(Received_Datum);
+    ISR_Timer_StartEx(Timer_ISR);
     
     PWMRedGreen_WriteCompare1(R);
     PWMRedGreen_WriteCompare2(G);
@@ -44,52 +46,74 @@ int main(void)
             case 0:
             if(t==0)
                 {
-                UART_PutString("Questo programma permette di controllare un canale RGB\nInserire packet header 0x0A per iniziare\n");
+                UART_PutString("Questo programma permette di controllare un canale RGB\r\nInserire packet header 0x0A per iniziare\r\n");
                 t=1;
                 }
             break;
             case 1:
             if(b==0)
             {
-                if(received == 'c')
-                {
-                    UART_PutString("Inserire entro 5 secondi intensita' canale rosso\n");
+                if(received == 0x0A)
+                {                
+                    if(h==0)
+                    {
+                    UART_PutString("Inserire entro 5 secondi intensita' canale rosso\r\n");
+                    h=1;
+                    }
                     Timer_Start();
                     ClockTimer_Start();
                 }
                 else
                 {
-                    UART_PutString("Packet header non valido\n");
+                    UART_PutString("\r\nPacket header non valido\r\n");
+                    CyDelay(1000);
                     r=0;
+                    t=0;
                 }
             }
             break;
             case 2:
             if (b==0)
             {
-                UART_PutString("Inserire entro 5 secondi intensita' canale verde\n");
+                if (c==0)
+                {
+                UART_PutString("\nInserire entro 5 secondi intensita' canale verde\n");
+                c=1;
+                }
                 R = received;
             }
             break;
             case 3:
             if (b==0)
             {
-                UART_PutString("Inserire entro 5 secondi intensita' canale blu\n");
+                if (s==0)
+                {
+                UART_PutString("\nInserire entro 5 secondi intensita' canale blu\n");
+                s=1;
+                }
                 G = received;
             }
             break;
             case 4:
             if(b==0)
             {
-                UART_PutString("Inserire Packet tail 0x0C per terminare\n");
+                if(p==0)
+                {
+                UART_PutString("\n\nInserire Packet tail 0x0C per terminare\n");
+                p=1;
+                }
                 B = received;
             }
             break;
             case 5:
-            if(received == 192)
+            if(received == 0x0C)
             {
-                UART_PutString("Packet tail corretto\n");
-                sprintf(message, "I colori selezionati per i tre canali sono: Rosso=%c\r\nVerde=%c\r\nBlu=%c\r\n", R,G,B);
+                if(q==0)
+                {
+                UART_PutString("\nPacket tail corretto\n");
+                q=1;
+                }
+                sprintf(message, "\nI colori selezionati per i tre canali sono: Rosso=%c\r\nVerde=%c\r\nBlu=%c\r\n", R,G,B);
                 UART_PutString(message);
                 //Timer_Stop();
                 //ClockTimer_Start();
@@ -107,10 +131,11 @@ int main(void)
             }
             else
             {
-                UART_PutString("Packet tail non valido\n");
+                UART_PutString("\nPacket tail non valido\n");
                 r=4;
+                p=0;
             }
-            break;
+            break;           
         }
     }
 }

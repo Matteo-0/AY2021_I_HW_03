@@ -1,13 +1,13 @@
-/* ========================================
+/* 
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
+ * 
+ * 
+ * 
  *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * 
+ * 
  *
- * ========================================
+ * 
 */
 
 #include "project.h"
@@ -15,13 +15,14 @@
 
 extern int r;
 extern char received;
-extern int b;
+extern int b,t,h;
 
 CY_ISR(Received_Datum)
 {
     if(UART_ReadRxStatus() == UART_RX_STS_FIFO_NOTEMPTY)
     {
-        if(received >= 0 && received <= 255)
+        received = UART_ReadRxData();
+        if(received >= 0x0A && received <= 0xFF )
         {
             r++;
             b=0;
