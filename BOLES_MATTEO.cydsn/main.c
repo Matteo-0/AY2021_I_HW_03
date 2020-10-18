@@ -19,7 +19,6 @@ char received;
 int r=1;
 int t=0;
 int i=1;
-int b=-1;
 
 int main(void)
 {

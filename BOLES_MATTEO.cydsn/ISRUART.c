@@ -14,7 +14,6 @@
 #include "ISRUART.h"
 #include "stdio.h"
 
-extern int b;
 extern int r;
 extern char received;
 extern int i;
@@ -28,6 +27,12 @@ CY_ISR(Received_Datum)
     {
         t=t+i;
         received = UART_ReadRxData();
+        if (received == 'v')
+        {
+            t=0;
+            UART_PutString("\nRGB LED Program $$$\r\n");
+            r=1;
+        }
         switch (t)
         { 
             case 1:
@@ -41,8 +46,8 @@ CY_ISR(Received_Datum)
             }
             else
             {        
-                UART_ClearRxBuffer();
-                UART_PutString("\nheader non corretto\n");
+                //UART_ClearRxBuffer();
+                //UART_PutString("\nheader non corretto\n");
                 r=1;
                 i=1;
                 t=0;               
@@ -82,7 +87,7 @@ CY_ISR(Received_Datum)
             else
             {
                 Timer_Stop();
-                UART_PutString("\nPacket tail non corretto\n\n");
+                //UART_PutString("\nPacket tail non corretto\n\n");
                 r=1;
                 i=1;
                 t=0;
