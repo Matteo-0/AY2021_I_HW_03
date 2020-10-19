@@ -1,13 +1,11 @@
-/* ========================================
- *
- * 
- * 
- * 
- *
- *
- * 
- *
- * 
+/**
+*     \file ISRUART.h
+*     \brief header file for the third assignment
+*
+*     This file contain the declaration of the ISR activated on the received byte.
+*
+*     \author: Matteo Boles
+*     \date: October 20, 2020
 */
 
 #ifndef __ISR_UART_H__
