@@ -29,8 +29,9 @@ CY_ISR(Received_Datum)
         received = UART_ReadRxData();        // We save the sent byte in the variable received
         if (received == 'v')                 // This part is used to connect to the GUI
         {
-            UART_PutString("\nRGB LED Program $$$\r\n");
-            r=1;
+            UART_PutString("\nRGB LED Program $$$\r\n\n");
+            r=1;                             // We return to the idle state
+            t=0;                             // t is set to zero so that we do not enter the switch case
         }
         switch (t)
         { 
